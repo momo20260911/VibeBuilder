@@ -1,0 +1,93 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background: linear-gradient(180deg, #0a0a0a 0%, #111111 100%);
+  background-attachment: fixed;
+  color: #e5e7eb;
+  font-family: var(--font-inter), Inter, system-ui, -apple-system, sans-serif;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #27272a;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3f3f46;
+}
+
+select option {
+  background: #18181b;
+  color: #e5e7eb;
+}
+
+/* 温度滑块 */
+input[type="range"].vibe-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.1);
+  outline: none;
+  cursor: pointer;
+}
+input[type="range"].vibe-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 9999px;
+  background: #6366f1;
+  border: 2px solid #0a0a0a;
+  box-shadow: 0 0 0 1px #6366f1;
+}
+input[type="range"].vibe-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 9999px;
+  background: #6366f1;
+  border: 2px solid #0a0a0a;
+  box-shadow: 0 0 0 1px #6366f1;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+.animate-fade-in {
+  animation: fade-in 0.18s ease-out;
+}
+.animate-dialog-in {
+  animation: dialog-in 0.18s ease-out;
+}
