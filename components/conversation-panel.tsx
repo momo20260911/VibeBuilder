@@ -17,16 +17,18 @@ export function ConversationPanel() {
   }, [messages, collapsed]);
 
   return (
-    <div className="flex h-56 shrink-0 flex-col border-t border-white/10 bg-[#0a0a0a]/40">
-      <div className="flex items-center justify-between border-b border-white/10 px-3 py-2">
-        <div className="flex items-center gap-1.5 text-xs text-zinc-400">
+    <div className="flex h-56 shrink-0 flex-col border-t border-gray-200 bg-gray-50 dark:border-white/10 dark:bg-[#0a0a0a]/40">
+      <div className="flex items-center justify-between border-b border-gray-200 px-3 py-2 dark:border-white/10">
+        <div className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-zinc-400">
           <MessageSquare className="h-3.5 w-3.5" />
           多轮对话
-          <span className="text-zinc-600">({visible.length})</span>
+          <span className="text-gray-400 dark:text-zinc-600">
+            ({visible.length})
+          </span>
         </div>
         <button
           onClick={() => setCollapsed((c) => !c)}
-          className="rounded p-1 text-zinc-400 transition-all duration-200 hover:bg-white/10 hover:text-white"
+          className="rounded p-1 text-gray-500 transition-all duration-200 hover:bg-gray-100 hover:text-gray-900 dark:text-zinc-400 dark:hover:bg-white/10 dark:hover:text-white"
           aria-label={collapsed ? "展开对话" : "收起对话"}
         >
           {collapsed ? (
@@ -38,12 +40,11 @@ export function ConversationPanel() {
       </div>
 
       {!collapsed && (
-        <div
-          ref={scrollRef}
-          className="flex-1 space-y-3 overflow-auto p-3"
-        >
+        <div ref={scrollRef} className="flex-1 space-y-3 overflow-auto p-3">
           {visible.length === 0 && (
-            <p className="text-center text-xs text-zinc-600">暂无对话记录</p>
+            <p className="text-center text-xs text-gray-400 dark:text-zinc-600">
+              暂无对话记录
+            </p>
           )}
 
           {visible.map((m, i) =>
@@ -55,11 +56,11 @@ export function ConversationPanel() {
               </div>
             ) : (
               <div key={i} className="flex justify-start">
-                <div className="max-w-[85%] rounded-lg rounded-bl-sm border border-white/10 bg-white/5 px-3 py-2 text-xs text-zinc-300">
-                  <span className="font-medium text-indigo-300">
+                <div className="max-w-[85%] rounded-lg rounded-bl-sm border border-gray-200 bg-gray-100 px-3 py-2 text-xs text-gray-700 dark:border-white/10 dark:bg-white/5 dark:text-zinc-300">
+                  <span className="font-medium text-indigo-600 dark:text-indigo-300">
                     已生成 HTML
                   </span>
-                  <span className="ml-1.5 text-zinc-500">
+                  <span className="ml-1.5 text-gray-400 dark:text-zinc-500">
                     约 {m.content.length} 字符
                   </span>
                 </div>

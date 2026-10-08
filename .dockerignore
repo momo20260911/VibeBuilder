@@ -4,6 +4,9 @@ node_modules
 .gitignore
 .env*
 *.tsbuildinfo
+# 本地 SQLite 数据库：镜像构建时由 prisma db push 重新生成
+prisma/dev.db
+prisma/dev.db-journal
 *.md
 Dockerfile
 .dockerignore

@@ -95,16 +95,16 @@ export function PromptScreen() {
     <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col items-center justify-center px-4 py-14">
       <div className="w-full">
         <div className="mb-8 text-center">
-          <h1 className="text-3xl font-semibold tracking-tight text-white sm:text-4xl">
+          <h1 className="text-3xl font-semibold tracking-tight text-gray-900 sm:text-4xl dark:text-white">
             用一句话描述你想创建的应用
           </h1>
-          <p className="mt-3 text-zinc-400">
+          <p className="mt-3 text-gray-500 dark:text-zinc-400">
             选择类型与风格，AI 会生成一个可直接运行的单文件 HTML 应用。
           </p>
         </div>
 
         {/* 大输入框 */}
-        <div className="rounded-xl border border-white/10 bg-white/5 p-2 backdrop-blur transition-all duration-200 focus-within:border-indigo-500">
+        <div className="rounded-xl border border-gray-200 bg-white p-2 backdrop-blur transition-all duration-200 focus-within:border-indigo-500 dark:border-white/10 dark:bg-white/5">
           <textarea
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
@@ -116,18 +116,18 @@ export function PromptScreen() {
             }}
             placeholder="用一句话描述你想创建的应用…"
             rows={3}
-            className="min-h-[120px] w-full resize-none bg-transparent px-3 py-2 text-base text-zinc-100 placeholder:text-zinc-500 outline-none"
+            className="min-h-[120px] w-full resize-none bg-transparent px-3 py-2 text-base text-gray-900 placeholder:text-gray-400 outline-none dark:text-zinc-100 dark:placeholder:text-zinc-500"
           />
         </div>
 
         {/* 快捷示例 */}
         <div className="mt-4 flex flex-wrap items-center gap-2">
-          <span className="text-xs text-zinc-500">试试：</span>
+          <span className="text-xs text-gray-400 dark:text-zinc-500">试试：</span>
           {EXAMPLE_PROMPTS.map((ex) => (
             <button
               key={ex}
               onClick={() => setPrompt(ex)}
-              className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-zinc-300 transition-all duration-200 hover:border-indigo-500 hover:text-white"
+              className="rounded-full border border-gray-200 bg-white px-3 py-1 text-xs text-gray-600 transition-all duration-200 hover:border-indigo-500 hover:text-indigo-600 dark:border-white/10 dark:bg-white/5 dark:text-zinc-300 dark:hover:text-white"
             >
               {ex}
             </button>
@@ -170,7 +170,9 @@ export function PromptScreen() {
         </div>
 
         {error && (
-          <p className="mt-4 text-center text-sm text-red-400">{error}</p>
+          <p className="mt-4 text-center text-sm text-red-600 dark:text-red-400">
+            {error}
+          </p>
         )}
       </div>
     </div>
@@ -193,7 +195,7 @@ function Chip({
         "rounded-full px-3 py-1.5 text-xs font-medium transition-all duration-200",
         active
           ? "bg-indigo-600 text-white"
-          : "border border-white/10 bg-white/5 text-zinc-300 hover:border-white/20 hover:text-white"
+          : "border border-gray-200 bg-white text-gray-600 hover:border-gray-300 hover:text-gray-900 dark:border-white/10 dark:bg-white/5 dark:text-zinc-300 dark:hover:border-white/20 dark:hover:text-white"
       )}
     >
       {children}

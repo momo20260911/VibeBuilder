@@ -99,6 +99,8 @@ vibe-builder/
 
 见 [DEPLOY.md](./DEPLOY.md)。要点：
 
-- **无需任何环境变量 / API Key**：Key 由每个用户在浏览器端自备，服务端不涉及密钥。
+- **AI API Key 由每个用户在浏览器端自备**，服务端不涉及任何 AI 密钥。
+- **登录 / 云存档**需要配置 `AUTH_SECRET` 与 GitHub OAuth（`AUTH_GITHUB_ID` / `AUTH_GITHUB_SECRET`），详见部署文档。
+- 使用 SQLite 本地数据库（`prisma/dev.db`），部署时需 `npx prisma db push` 初始化。
 - 支持 PM2 + Nginx 反代（SSE 需关闭 `proxy_buffering`），或 Docker 一键部署。
 - 部署文档针对 Rocky Linux 9（RHEL/CentOS 系列），含 SELinux、firewalld 等关键配置。

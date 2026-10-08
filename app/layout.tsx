@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { Providers } from "./providers";
+import { Header } from "@/components/header";
+import { SettingsDialog } from "@/components/settings-dialog";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
@@ -16,8 +19,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="zh-CN" className={inter.variable}>
-      <body className="antialiased">{children}</body>
+    <html lang="zh-CN" className={inter.variable} suppressHydrationWarning>
+      <body className="antialiased">
+        <Providers>
+          <div className="flex min-h-screen flex-col">
+            <Header />
+            {children}
+            <SettingsDialog />
+          </div>
+        </Providers>
+      </body>
     </html>
   );
 }

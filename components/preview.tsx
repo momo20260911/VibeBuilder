@@ -36,12 +36,12 @@ export function Preview({ code }: { code: string }) {
 
   return (
     <div className="flex h-full flex-col">
-      <div className="flex items-center justify-between border-b border-white/10 px-3 py-2">
-        <span className="text-xs text-zinc-500">预览</span>
+      <div className="flex items-center justify-between border-b border-gray-200 px-3 py-2 dark:border-white/10">
+        <span className="text-xs text-gray-500 dark:text-zinc-500">预览</span>
         <div className="flex items-center gap-1">
           <ToolButton onClick={copy} title="复制代码">
             {copied ? (
-              <Check className="h-3.5 w-3.5 text-emerald-400" />
+              <Check className="h-3.5 w-3.5 text-emerald-500 dark:text-emerald-400" />
             ) : (
               <Copy className="h-3.5 w-3.5" />
             )}
@@ -85,7 +85,7 @@ function ToolButton({
     <button
       onClick={onClick}
       title={title}
-      className="rounded-md p-1.5 text-zinc-400 transition-all duration-200 hover:bg-white/10 hover:text-white"
+      className="rounded-md p-1.5 text-gray-500 transition-all duration-200 hover:bg-gray-100 hover:text-gray-900 dark:text-zinc-400 dark:hover:bg-white/10 dark:hover:text-white"
     >
       {children}
     </button>

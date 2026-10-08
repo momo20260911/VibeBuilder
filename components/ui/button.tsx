@@ -6,10 +6,12 @@ type Size = "default" | "sm" | "lg" | "icon";
 
 const variants: Record<Variant, string> = {
   default: "bg-indigo-600 text-white hover:bg-indigo-500",
-  secondary: "bg-white/10 text-white hover:bg-white/15",
-  ghost: "text-zinc-300 hover:bg-white/10 hover:text-white",
+  secondary:
+    "bg-gray-200 text-gray-900 hover:bg-gray-300 dark:bg-white/10 dark:text-white dark:hover:bg-white/15",
+  ghost:
+    "text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-zinc-300 dark:hover:bg-white/10 dark:hover:text-white",
   outline:
-    "border border-white/10 bg-transparent text-zinc-200 hover:border-white/20 hover:bg-white/5",
+    "border border-gray-300 bg-transparent text-gray-700 hover:border-gray-400 hover:bg-gray-100 dark:border-white/10 dark:text-zinc-200 dark:hover:border-white/20 dark:hover:bg-white/5",
 };
 
 const sizes: Record<Size, string> = {

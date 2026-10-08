@@ -30,7 +30,7 @@ export function Dialog({ open, onClose, children, className }: DialogProps) {
       />
       <div
         className={cn(
-          "animate-dialog-in relative w-full max-w-md rounded-xl border border-white/10 bg-zinc-900 p-6 shadow-2xl",
+          "animate-dialog-in relative w-full max-w-md rounded-xl border border-gray-200 bg-white p-6 shadow-2xl dark:border-white/10 dark:bg-zinc-900",
           className
         )}
       >

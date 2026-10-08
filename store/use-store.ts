@@ -5,6 +5,7 @@ import {
   DEFAULT_CONFIG,
   loadConfig,
   persistConfig,
+  SYSTEM_PROMPT,
   type ApiConfig,
 } from "@/lib/config";
 
@@ -20,6 +21,15 @@ export interface Version {
   code: string;
   timestamp: number;
   label: string;
+}
+
+export interface LoadedProject {
+  id: string;
+  name: string;
+  description: string | null;
+  currentCode: string | null;
+  versions: { id: string; code: string; label: string; createdAt: string }[];
+  messages: { id: string; role: string; content: string; createdAt: string }[];
 }
 
 const MAX_VERSIONS = 10;
@@ -45,6 +55,7 @@ interface AppState {
   settingsOpen: boolean;
   fullscreenPreview: boolean;
   generationId: number;
+  currentProjectId: string | null;
 
   hydrate: () => void;
   setApiConfig: (partial: Partial<ApiConfig>) => void;
@@ -66,6 +77,9 @@ interface AppState {
 
   restoreVersion: (version: Version) => void;
   resetToHome: () => void;
+
+  saveProject: (name?: string) => Promise<void>;
+  loadProject: (project: LoadedProject) => void;
 }
 
 export const useAppStore = create<AppState>((set, get) => ({
@@ -80,6 +94,7 @@ export const useAppStore = create<AppState>((set, get) => ({
   settingsOpen: false,
   fullscreenPreview: false,
   generationId: 0,
+  currentProjectId: null,
 
   hydrate: () => set({ apiConfig: loadConfig() }),
 
@@ -164,6 +179,62 @@ export const useAppStore = create<AppState>((set, get) => ({
       status: "home",
       streamText: "",
       fullscreenPreview: false,
+      currentProjectId: null,
       generationId: state.generationId + 1,
     })),
+
+  saveProject: async (name) => {
+    const state = get();
+    const payload = {
+      name: name?.trim() || "未命名项目",
+      currentCode: state.generatedCode,
+      versions: state.versions.map((v) => ({ code: v.code, label: v.label })),
+      messages: state.messages
+        .filter((m) => m.role !== "system")
+        .map((m) => ({ role: m.role, content: m.content })),
+    };
+
+    const url = state.currentProjectId
+      ? `/api/projects/${state.currentProjectId}`
+      : "/api/projects";
+    const res = await fetch(url, {
+      method: state.currentProjectId ? "PUT" : "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    if (!res.ok) {
+      const data = (await res.json().catch(() => ({}))) as { error?: string };
+      throw new Error(data.error || "保存失败");
+    }
+
+    const project = (await res.json()) as { id: string };
+    if (!state.currentProjectId) {
+      set({ currentProjectId: project.id });
+    }
+  },
+
+  loadProject: (project) =>
+    set({
+      currentProjectId: project.id,
+      generatedCode: project.currentCode ?? "",
+      previewCode: project.currentCode ?? "",
+      messages: [
+        { role: "system", content: SYSTEM_PROMPT },
+        ...project.messages.map((m) => ({
+          role: m.role as ChatMessage["role"],
+          content: m.content,
+        })),
+      ],
+      versions: project.versions.map((v) => ({
+        id: v.id,
+        code: v.code,
+        timestamp: new Date(v.createdAt).getTime(),
+        label: v.label,
+      })),
+      status: "done",
+      streamText: "",
+      isGenerating: false,
+      fullscreenPreview: false,
+    }),
 }));

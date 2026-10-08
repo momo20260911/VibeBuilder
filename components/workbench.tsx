@@ -74,7 +74,7 @@ export function Workbench() {
         }`}
       >
         {!fullscreenPreview && (
-          <div className="min-h-0 border-r border-white/10">
+          <div className="min-h-0 border-r border-gray-200 dark:border-white/10">
             <CodeEditor value={generatedCode} onChange={setGeneratedCode} />
           </div>
         )}
@@ -87,10 +87,10 @@ export function Workbench() {
       </div>
 
       {/* 底部修改栏 */}
-      <div className="border-t border-white/10 bg-[#0a0a0a]/80 p-3">
+      <div className="border-t border-gray-200 bg-white/80 p-3 dark:border-white/10 dark:bg-[#0a0a0a]/80">
         <div className="mx-auto flex max-w-[1400px] gap-3">
           <input
-            className="h-10 flex-1 rounded-lg border border-white/10 bg-white/5 px-3 text-sm text-zinc-100 placeholder:text-zinc-500 outline-none transition-all duration-200 focus:border-indigo-500"
+            className="h-10 flex-1 rounded-lg border border-gray-300 bg-white px-3 text-sm text-gray-900 placeholder:text-gray-400 outline-none transition-all duration-200 focus:border-indigo-500 dark:border-white/10 dark:bg-white/5 dark:text-zinc-100 dark:placeholder:text-zinc-500"
             placeholder="输入修改意见，例如：把按钮改成圆角、增加深色模式…"
             value={instruction}
             onChange={(e) => setInstruction(e.target.value)}
@@ -115,7 +115,7 @@ export function Workbench() {
           </Button>
         </div>
         {error && (
-          <p className="mx-auto mt-2 max-w-[1400px] text-sm text-red-400">
+          <p className="mx-auto mt-2 max-w-[1400px] text-sm text-red-600 dark:text-red-400">
             {error}
           </p>
         )}

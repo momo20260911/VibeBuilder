@@ -112,8 +112,10 @@ export function SettingsDialog() {
 
   return (
     <Dialog open={open} onClose={() => setOpen(false)}>
-      <h2 className="text-lg font-semibold text-white">模型服务配置</h2>
-      <p className="mt-1 text-xs text-zinc-500">
+      <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+        模型服务配置
+      </h2>
+      <p className="mt-1 text-xs text-gray-400 dark:text-zinc-500">
         配置统一保存在浏览器 localStorage。
       </p>
 
@@ -173,7 +175,7 @@ export function SettingsDialog() {
         <div className="space-y-1.5">
           <div className="flex items-center justify-between">
             <Label htmlFor="temperature">Temperature</Label>
-            <span className="text-sm text-zinc-400">
+            <span className="text-sm text-gray-500 dark:text-zinc-400">
               {apiConfig.temperature.toFixed(1)}
             </span>
           </div>
@@ -200,7 +202,7 @@ export function SettingsDialog() {
       </div>
 
       {/* 测试连接 */}
-      <div className="mt-6 border-t border-white/10 pt-5">
+      <div className="mt-6 border-t border-gray-200 pt-5 dark:border-white/10">
         <Button
           variant="outline"
           size="sm"
@@ -221,10 +223,10 @@ export function SettingsDialog() {
         </Button>
 
         {testStatus === "success" && (
-          <div className="mt-3 rounded-lg border border-emerald-500/30 bg-emerald-500/10 p-3 text-sm text-emerald-300">
+          <div className="mt-3 rounded-lg border border-emerald-500/30 bg-emerald-500/10 p-3 text-sm text-emerald-700 dark:text-emerald-300">
             <p>✅ 连接成功！模型已响应</p>
             {modelReply && (
-              <p className="mt-1 break-words text-xs text-emerald-400/80">
+              <p className="mt-1 break-words text-xs text-emerald-600/80 dark:text-emerald-400/80">
                 模型返回：{modelReply}
               </p>
             )}
@@ -232,11 +234,11 @@ export function SettingsDialog() {
         )}
 
         {testStatus === "error" && (
-          <div className="mt-3 rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-300">
+          <div className="mt-3 rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-600 dark:text-red-300">
             <p>❌ 连接失败: {testMessage}</p>
             <button
               onClick={handleTest}
-              className="mt-2 text-xs text-red-300 underline underline-offset-2 transition-colors hover:text-red-200"
+              className="mt-2 text-xs text-red-600 underline underline-offset-2 transition-colors hover:text-red-500 dark:text-red-300 dark:hover:text-red-200"
             >
               重试
             </button>
