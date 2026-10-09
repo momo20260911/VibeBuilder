@@ -183,7 +183,18 @@ pm2 startup
 
 ---
 
-## 九、Nginx 反向代理
+## 九、Nginx 反向代理（80 / 443 → 3000）
+
+**端口结构（先理清，避免误解）：**
+
+| 层 | 端口 | 说明 |
+|---|---|---|
+| 应用（Next.js / PM2） | `127.0.0.1:3000` | 实际运行的应用，**不对外** |
+| Nginx 对外入口 | `80` / `443` | 唯一对外端口 |
+| 80 | → 跳转 | 访问 HTTP 时 **301 跳转到 HTTPS（443）** |
+| 443 | → 反代 | 访问 HTTPS 时反向代理到 `127.0.0.1:3000` |
+
+> 所以不存在「443 转 80」；正确链路是 `浏览器 → 80(跳 HTTPS) → 443 → 3000`。
 
 1. 编辑项目自带的 `nginx.conf`，把 `server_name vibe.example.com;` 改成你的域名（或 IP）。
 2. 复制到 `conf.d`（Rocky 用 conf.d，不是 sites-available）并启用：
@@ -199,20 +210,61 @@ sudo systemctl enable --now nginx
 sudo systemctl reload nginx
 ```
 
-> ⚠️ `nginx.conf` 里 `proxy_buffering off;` 是 **SSE 流式必需**，不要删，否则生成过程会卡住或一次性返回。
-> 配置里的 `proxy_set_header Host $host` 与 `X-Forwarded-Proto $scheme` 也是 OAuth 登录正确识别域名所必需的，保留即可。
+> ⚠️ `proxy_buffering off;` 是 **SSE 流式必需**，不要删，否则生成过程会卡住或一次性返回；`Host` / `X-Forwarded-Proto` 头是 **OAuth 登录识别域名必需**，保留即可。
+>
+> 项目自带的 `nginx.conf` 只含 `listen 80` 一块，这是给 **certbot 自动升级** 用的「HTTP 起步版」。**443 块不需要你手动写**，下一步 `certbot --nginx` 会自动生成并改写。
 
 ---
 
-## 十、HTTPS（Let's Encrypt，certbot 来自 EPEL）
+## 十、HTTPS / 443（Let's Encrypt，certbot 来自 EPEL）
+
+`certbot --nginx` 会自动完成两件事：**① 签发证书**、**② 改写 nginx 配置**（新增 `listen 443 ssl` 块 + 把 80 改成 `return 301` 跳 HTTPS）。所以 443 无需手动添加：
 
 ```bash
 sudo dnf install -y certbot python3-certbot-nginx
+
+# 自动：签发证书 + 新增 443 块 + 80→443 跳转（会改写上一步的 conf.d 配置）
 sudo certbot --nginx -d vibe.example.com
+
 sudo certbot renew --dry-run    # 验证自动续期
 ```
 
-> 签完证书后，确认 GitHub OAuth App 的回调地址是 `https://` 前缀，与 `AUTH_URL` 保持一致。
+执行完后，`vibe-builder.conf` 会被 certbot 改写成类似下面这样（仅供参考，无需手动改）：
+
+```nginx
+# 80：HTTP → 跳转 HTTPS（certbot 自动把原 80 块改成这个）
+server {
+    listen 80;
+    server_name vibe.example.com;
+    return 301 https://$host$request_uri;
+}
+
+# 443：HTTPS → 反代到 3000（certbot 自动新增，并填好证书路径）
+server {
+    listen 443 ssl;
+    server_name vibe.example.com;
+
+    ssl_certificate     /etc/letsencrypt/live/vibe.example.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/vibe.example.com/privkey.pem;
+
+    location / {
+        proxy_pass http://127.0.0.1:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_buffering off;      # SSE 流式必需
+        proxy_cache off;
+        proxy_read_timeout 300s;
+    }
+}
+```
+
+> - 签完证书后，确认 GitHub OAuth App 回调地址与 `AUTH_URL` 都是 `https://` 前缀。
+> - 暂时没域名想先用 IP 试：安全组/firewalld 放行 3000，直接访问 `http://服务器IP:3000`；正式使用仍建议域名 + HTTPS。
 
 ---
 
